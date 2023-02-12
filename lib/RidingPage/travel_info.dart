@@ -17,7 +17,8 @@ class _TravelInfoState extends State<TravelInfo> {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: Colors.white),
+          color: Colors.white,
+          border: Border.all(color: Colors.black, width: 0.5)),
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.all(46),
       padding: EdgeInsets.only(top: 16, bottom: 16, left: 10, right: 10),
@@ -25,7 +26,7 @@ class _TravelInfoState extends State<TravelInfo> {
         Expanded(
           flex: 5,
           child: Text(
-            '1.3 km',
+            '0 km',
             style: TextStyle(
                 color: kPrimaryColor,
                 fontSize: 16,
@@ -36,7 +37,7 @@ class _TravelInfoState extends State<TravelInfo> {
         Expanded(
           flex: 5,
           child: Text(
-            '₹50',
+            '₹0',
             style: TextStyle(
                 color: kPrimaryColor,
                 fontSize: 16,

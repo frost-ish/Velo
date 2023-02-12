@@ -24,9 +24,8 @@ class _SignInPageState extends State<SignInPage> {
                     margin: EdgeInsets.only(left: 8),
                     alignment: AlignmentDirectional.topStart,
                     child: Text(
-                      'Lorem Ipsum',
+                      "Just a second!",
                       style: TextStyle(
-                        fontFamily: 'Inter',
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
                         color: Colors.white,
@@ -37,7 +36,7 @@ class _SignInPageState extends State<SignInPage> {
                     margin: EdgeInsets.only(top: 15, left: 8),
                     alignment: AlignmentDirectional.topStart,
                     child: Text(
-                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                      "Let's personalize the app for you! Login with your college id to start riding.",
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 15,

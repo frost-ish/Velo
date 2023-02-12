@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
+import 'package:velo/Helpers/theme.dart';
 import 'package:velo/HomePage/main.dart';
+import 'package:velo/RidingPage/timer.dart';
 import 'package:velo/firebase_options.dart';
 
 class RideEndPage extends StatefulWidget {
@@ -19,7 +21,7 @@ class RideEndPage extends StatefulWidget {
 class _RideEndPageState extends State<RideEndPage> {
   bool isDataLoaded = false;
   String? time;
-  int? pointsEarned;
+  int? pointsEarned, price;
 
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _RideEndPageState extends State<RideEndPage> {
         .child(rideId)
         .get();
     pointsEarned = int.parse(snapshot2.child("pointsEarned").value.toString());
+    price = int.parse(snapshot2.child("price").value.toString());
     DateTime now = DateTime.now();
     DateFormat dateFormat = DateFormat("yyyy-MM-dd hh:mm:ss");
     DateTime start =
@@ -48,7 +51,8 @@ class _RideEndPageState extends State<RideEndPage> {
     DateTime end =
         dateFormat.parse(snapshot2.child("timeEnd").value.toString());
     time =
-        "${(end.difference(start).inSeconds ~/ 60) == 0 ? "" : "${end.difference(start).inSeconds ~/ 60} minutes and "}${end.difference(start).inSeconds % 60} seconds.";
+        "${(end.difference(start).inSeconds ~/ 60) == 0 ? "" : "${end.difference(start).inSeconds ~/ 60}:"}${end.difference(start).inSeconds % 60}";
+
     setState(() {
       isDataLoaded = true;
     });
@@ -81,12 +85,64 @@ class _RideEndPageState extends State<RideEndPage> {
                         alignment: Alignment.center,
                         padding: EdgeInsets.only(left: 30, right: 30),
                         child: Text(
-                          'You cycled for $time',
+                          "Here's your ride recap",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
                           ),
                         ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                            color: Colors.white),
+                        width: MediaQuery.of(context).size.width,
+                        margin: EdgeInsets.all(46),
+                        padding: EdgeInsets.only(
+                            top: 16, bottom: 16, left: 10, right: 10),
+                        child: Row(children: [
+                          Expanded(
+                            flex: 5,
+                            child: Row(
+                              children: [
+                                Icon(Icons.person_pin_circle),
+                                Text(
+                                  '0.5 km',
+                                  style: TextStyle(
+                                      color: kPrimaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: Row(
+                              children: [
+                                Icon(Icons.currency_rupee),
+                                Text(
+                                  '₹0',
+                                  style: TextStyle(
+                                      color: kPrimaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 5,
+                            child: Row(
+                              children: [
+                                Icon(Icons.timer),
+                                RideTimer(),
+                              ],
+                            ),
+                          ),
+                        ]),
                       ),
                       Container(
                         alignment: Alignment.center,
@@ -100,6 +156,7 @@ class _RideEndPageState extends State<RideEndPage> {
                           ),
                         ),
                       ),
+                      Text(''),
                       Spacer(),
                       Container(
                         width: double.infinity,
