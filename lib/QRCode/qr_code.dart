@@ -108,7 +108,9 @@ class QRCodeState extends State<QRCode> {
                 )
               ],
             )
-          : CircularProgressIndicator(),
+          : Center(
+              child: CircularProgressIndicator(),
+            ),
     ));
   }
 

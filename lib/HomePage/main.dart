@@ -9,6 +9,7 @@ import 'package:velo/Helpers/google_auth.dart';
 import 'package:velo/Helpers/gps_service.dart';
 import 'package:velo/HomePage/map.dart';
 import 'package:velo/HomePage/user_info_bar.dart';
+import 'package:velo/RideHistoryPage/history_page.dart';
 import 'package:velo/RidingPage/main.dart';
 import 'package:velo/SignInPage/main.dart';
 import 'package:velo/firebase_options.dart';
@@ -147,7 +148,12 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         ListTile(
-            title: const Text('History'), onTap: () => Navigator.pop(context)),
+            title: const Text('History'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HistoryPage()));
+            }),
         ListTile(
             title: const Text('Pay now'), onTap: () => Navigator.pop(context)),
         ListTile(
