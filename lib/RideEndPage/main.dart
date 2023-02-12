@@ -71,10 +71,10 @@ class _RideEndPageState extends State<RideEndPage> {
                         child: Text(
                           'Voila!',
                           style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 40,
-                            fontFamily: 'Agne',
-                          ),
+                              color: Colors.black,
+                              fontSize: 40,
+                              fontFamily: 'Agne',
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
                       Container(
