@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:intl/intl.dart';
 import 'package:velo/Helpers/theme.dart';
 import 'package:dotted_line/dotted_line.dart';
 
@@ -14,6 +15,21 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
+  var months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ];
+  DateFormat dateFormat = DateFormat("hh:mma (dd ");
   var rides = <Ride>[];
   @override
   void initState() {
@@ -30,8 +46,6 @@ class _HistoryPageState extends State<HistoryPage> {
         .child(FirebaseAuth.instance.currentUser!.uid)
         .get();
 
-    print('HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
-
     for (final snapshot in snap.children) {
       if (snapshot.child("inProgress").value == true) continue;
       Ride ride = Ride();
@@ -41,6 +55,7 @@ class _HistoryPageState extends State<HistoryPage> {
       ride.timeStart = snapshot.child("timeStart").value.toString();
       ride.timeEnd = snapshot.child("timeEnd").value.toString();
       ride.user = snapshot.child("user").value.toString();
+      ride.price = int.parse(snapshot.child("price").value.toString());
       ride.calculateTime();
       rides.add(ride);
     }
@@ -49,7 +64,13 @@ class _HistoryPageState extends State<HistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: kPrimaryColor),
+      appBar: AppBar(
+        backgroundColor: kPrimaryColor,
+        title: Text(
+          "Ride History",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
       body: Container(
         child: ListView.builder(
           itemCount: rides.length,
@@ -62,47 +83,78 @@ class _HistoryPageState extends State<HistoryPage> {
               margin: EdgeInsets.only(bottom: 20),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18)),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: Row(
-                  children: [
-                    Column(
+              child: InkWell(
+                splashFactory: InkRipple.splashFactory,
+                child: Container(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: Row(
                       children: [
-                        Icon(
-                          Icons.circle,
-                          size: 10,
-                          color: Colors.green,
-                        ),
-                        SizedBox(
-                          height: 30,
-                          child: DottedLine(
-                            direction: Axis.vertical,
-                          ),
-                        ),
-                        Icon(
-                          Icons.circle,
-                          size: 10,
-                          color: Colors.red,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Row(
+                        Column(
                           children: [
-                            Text(ride.stationStart!),
+                            Icon(
+                              Icons.circle,
+                              size: 10,
+                              color: Colors.green,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 4),
+                              child: SizedBox(
+                                height: 22,
+                                child: DottedLine(
+                                  direction: Axis.vertical,
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              Icons.circle,
+                              size: 10,
+                              color: Colors.red,
+                            ),
                           ],
                         ),
-                        SizedBox(
-                          height: 25,
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(ride.stationStart!),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Text(
+                                    "${dateFormat.format(ride.timeStartObj!)}${months[(int.parse(DateFormat('MM').format(ride.timeStartObj!))) - 1]})",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 25,
+                            ),
+                            Row(
+                              children: [
+                                Text(ride.stationEnd!),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Text(
+                                    "${dateFormat.format(ride.timeEndObj!)}${months[(int.parse(DateFormat('MM').format(ride.timeEndObj!))) - 1]})",
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 6),
-                          child: Text(ride.stationEnd!),
-                        ),
+                        Spacer(),
+                        Column(
+                          children: [
+                            Text("₹${ride.price}"),
+                            Text(
+                                "${(ride.timeEndObj!.difference(ride.timeStartObj!).inSeconds ~/ 60) == 0 ? "00" : "${ride.timeEndObj!.difference(ride.timeStartObj!).inSeconds ~/ 60}"}:${ride.timeEndObj!.difference(ride.timeStartObj!).inSeconds % 60}")
+                          ],
+                        )
                       ],
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
             );

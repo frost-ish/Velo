@@ -10,6 +10,7 @@ class Ride {
   String? timeEnd;
   String? user;
   DateTime? timeStartObj, timeEndObj;
+  int? price;
 
   void calculateTime() {
     DateFormat dateFormat = DateFormat("yyyy-MM-dd hh:mm:ss");

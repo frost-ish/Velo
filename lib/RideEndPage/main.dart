@@ -40,6 +40,7 @@ class _RideEndPageState extends State<RideEndPage> {
     final snapshot2 = await FirebaseDatabase.instance
         .ref()
         .child("Rides")
+        .child(uid)
         .child(rideId)
         .get();
     pointsEarned = int.parse(snapshot2.child("pointsEarned").value.toString());
