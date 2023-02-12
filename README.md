@@ -17,3 +17,12 @@
 
 ## Arduino Code
 The arduino code has been uploaded in /Arduino/cycleStation.ino
+
+## Screenshots
+![Screenshot](/Screenshots/signinpage.jpg)
+![Screenshot](/Screenshots/homepage.jpg)
+![Screenshot](/Screenshots/qrtolock.jpg)
+![Screenshot](/Screenshots/ridingpage.jpg)
+![Screenshot](/Screenshots/qrtounlock.jpg)
+![Screenshot](/Screenshots/rideendpage.jpg)
+![Screenshot](/Screenshots/ridehistory.jpg)
