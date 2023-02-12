@@ -17,10 +17,10 @@ class _HistoryPageState extends State<HistoryPage> {
   var rides = <Ride>[];
   @override
   void initState() {
-    super.initState();
     fetchRides().then((value) {
       setState(() {});
     });
+    super.initState();
   }
 
   Future<void> fetchRides() async {
@@ -29,6 +29,8 @@ class _HistoryPageState extends State<HistoryPage> {
         .child("Rides")
         .child(FirebaseAuth.instance.currentUser!.uid)
         .get();
+
+    print('HIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
 
     for (final snapshot in snap.children) {
       if (snapshot.child("inProgress").value == true) continue;
@@ -61,39 +63,45 @@ class _HistoryPageState extends State<HistoryPage> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18)),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                 child: Row(
                   children: [
                     Column(
                       children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.circle,
-                              size: 10,
-                              color: Colors.green,
-                            ),
-                            Text(ride.stationStart!),
-                          ],
+                        Icon(
+                          Icons.circle,
+                          size: 10,
+                          color: Colors.green,
                         ),
                         SizedBox(
-                          height: 15,
+                          height: 30,
                           child: DottedLine(
                             direction: Axis.vertical,
                           ),
                         ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.circle,
-                              size: 10,
-                              color: Colors.red,
-                            ),
-                            Text(ride.stationEnd!),
-                          ],
+                        Icon(
+                          Icons.circle,
+                          size: 10,
+                          color: Colors.red,
                         ),
                       ],
                     ),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            Text(ride.stationStart!),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 25,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 6),
+                          child: Text(ride.stationEnd!),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
