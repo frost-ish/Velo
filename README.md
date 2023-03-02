@@ -1,16 +1,28 @@
-# velo
+# Velo
+#### An eco-friendly solution to all your in-campus travel problems.
 
-A new Flutter project.
 
-## Getting Started
+## Features
+- QR based cycle locking unlocking
+- Real-time cycle availability
+- Ride History
+- Reedemable ride points for coupons
 
-This project is a starting point for a Flutter application.
+## Hardware Used
+- Arduino Uno
+- HC-05 Bluetooth Module
+- Resistors/Potentiometer
+- LCD screen
+- LEDs
 
-A few resources to get you started if this is your first Flutter project:
+## Arduino Code
+The arduino code has been uploaded in /Arduino/cycleStation.ino
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Screenshots
+![Screenshot](/Screenshots/signinpage.jpg)
+![Screenshot](/Screenshots/homepage.jpg)
+![Screenshot](/Screenshots/qrtolock.jpg)
+![Screenshot](/Screenshots/ridingpage.jpg)
+![Screenshot](/Screenshots/qrtounlock.jpg)
+![Screenshot](/Screenshots/rideendpage.jpg)
+![Screenshot](/Screenshots/ridehistory.jpg)
