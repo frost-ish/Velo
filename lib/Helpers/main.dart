@@ -7,6 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:velo/Helpers/google_auth.dart';
 import 'package:velo/Helpers/gps_service.dart';
+import 'package:velo/Helpers/stand.dart';
 import 'package:velo/HomePage/map.dart';
 import 'package:velo/HomePage/user_info_bar.dart';
 import 'package:velo/RideHistoryPage/history_page.dart';
@@ -20,9 +21,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var searchTerms = <String>[];
+  var stands = <Stand>[];
   String searchValue = '';
-  var markers = <Marker>[].toSet();
-  final List<String> _suggestions = ['Amul', 'APJ', 'Admin Block'];
+  final List<String> _suggestions = [];
 
   Future<List<String>> _fetchSuggestions(String searchValue) async {
     await Future.delayed(const Duration(milliseconds: 750));
@@ -68,7 +70,9 @@ class _HomePageState extends State<HomePage> {
     final ref = FirebaseDatabase.instance.ref();
     ref.child('Stands').onValue.listen((event) {
       for (var standSnapshot in event.snapshot.children) {
-        markers = <Marker>[].toSet();
+        Stand stand = Stand();
+        searchTerms.add(standSnapshot.key!);
+
         Marker marker = Marker(
           markerId: MarkerId(standSnapshot.key!),
           position: LatLng(
@@ -90,7 +94,8 @@ class _HomePageState extends State<HomePage> {
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
         );
-        markers.add(marker);
+        stand.marker = marker;
+        stand.name = standSnapshot.key;
       }
       setState(() {});
     });
@@ -133,7 +138,12 @@ class _HomePageState extends State<HomePage> {
       appBar: EasySearchBar(
           backgroundColor: Color(0xFF0C9869),
           title: const Text('Velo'),
-          onSearch: (value) => setState(() => searchValue = value),
+          onSearch: (value) {
+            setState(() => searchValue = value);
+            stands.forEach((element) {
+              if (searchValue == element.name) {}
+            });
+          },
           asyncSuggestions: (value) async => await _fetchSuggestions(value)),
       drawer: Drawer(
           child: ListView(padding: EdgeInsets.zero, children: [
@@ -171,7 +181,7 @@ class _HomePageState extends State<HomePage> {
         child: Stack(
           children: [
             isLocationAvailable
-                ? MyMap(lat, long, markers)
+                ? MyMap(lat, long, stands)
                 : Container(
                     alignment: Alignment.center,
                     child: CircularProgressIndicator()),

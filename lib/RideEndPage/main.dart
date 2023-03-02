@@ -52,7 +52,7 @@ class _RideEndPageState extends State<RideEndPage> {
     DateTime end =
         dateFormat.parse(snapshot2.child("timeEnd").value.toString());
     time =
-        "${(end.difference(start).inSeconds ~/ 60) == 0 ? "" : "${end.difference(start).inSeconds ~/ 60}:"}${end.difference(start).inSeconds % 60}";
+        "${(end.difference(start).inSeconds ~/ 60) == 0 ? "00" : "${end.difference(start).inSeconds ~/ 60}"}:${end.difference(start).inSeconds % 60}";
 
     setState(() {
       isDataLoaded = true;
@@ -139,7 +139,14 @@ class _RideEndPageState extends State<RideEndPage> {
                             child: Row(
                               children: [
                                 Icon(Icons.timer),
-                                RideTimer(),
+                                Text(
+                                  '$time',
+                                  style: TextStyle(
+                                      color: kPrimaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
                               ],
                             ),
                           ),
