@@ -13,8 +13,25 @@ class MyMap extends StatelessWidget {
   var stands = <Stand>[];
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+  late GoogleMapController gMapController;
 
-  MyMap(this.lat, this.long, this.stands);
+  MyMap(this.lat, this.long, this.stands) {
+    populateMarkers();
+  }
+
+  void relocateCamera(Stand stand) async {
+    print(gMapController == null ? "NULLLLLLLLLLL" : "THEEKE BC");
+    gMapController.animateCamera(CameraUpdate.newCameraPosition(
+        const CameraPosition(target: LatLng(0, 0))));
+    _controller.future.then(
+      (value) {
+        print("Controller Captured!");
+      },
+      onError: (error) {
+        print(error.toString());
+      },
+    );
+  }
 
   void populateMarkers() {
     stands.forEach((element) {
@@ -32,7 +49,8 @@ class MyMap extends StatelessWidget {
         zoom: 20,
       ),
       onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
+        print("ASSIGNING CONTROLLER");
+        gMapController = controller;
       },
     );
   }

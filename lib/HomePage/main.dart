@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,6 +16,8 @@ import 'package:velo/RidingPage/main.dart';
 import 'package:velo/SignInPage/main.dart';
 import 'package:velo/firebase_options.dart';
 
+import '../Helpers/stand.dart';
+
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _HomePageState();
@@ -21,8 +25,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String searchValue = '';
-  var markers = <Marker>[].toSet();
-  final List<String> _suggestions = ['Amul', 'APJ', 'Admin Block'];
+  var stands = <Stand>[];
+  List<String> _suggestions = [];
 
   Future<List<String>> _fetchSuggestions(String searchValue) async {
     await Future.delayed(const Duration(milliseconds: 750));
@@ -51,7 +55,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> checkForUser() async {
-    return FirebaseAuth.instance.currentUser != null;
+    return FirebaseAuth.instance.currentUser != null &&
+        GoogleAuth.googleSignIn == null;
   }
 
   Future<bool> checkIfRiding() async {
@@ -68,7 +73,12 @@ class _HomePageState extends State<HomePage> {
     final ref = FirebaseDatabase.instance.ref();
     ref.child('Stands').onValue.listen((event) {
       for (var standSnapshot in event.snapshot.children) {
-        markers = <Marker>[].toSet();
+        Stand stand = Stand();
+        stand.name = standSnapshot.key;
+        stand.lat = double.parse(
+            standSnapshot.child("latLong").value.toString().split(',')[0]);
+        stand.long = double.parse(
+            standSnapshot.child("latLong").value.toString().split(',')[1]);
         Marker marker = Marker(
           markerId: MarkerId(standSnapshot.key!),
           position: LatLng(
@@ -90,7 +100,9 @@ class _HomePageState extends State<HomePage> {
           icon:
               BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
         );
-        markers.add(marker);
+        stand.marker = marker;
+        stands.add(stand);
+        _suggestions.add(stand.name!);
       }
       setState(() {});
     });
@@ -127,13 +139,21 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  late MyMap ref;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: EasySearchBar(
           backgroundColor: Color(0xFF0C9869),
           title: const Text('Velo'),
-          onSearch: (value) => setState(() => searchValue = value),
+          onSearch: (value) => setState(() {
+                searchValue = value;
+              }),
+          onSuggestionTap: (value) {
+            ref.relocateCamera(
+                stands.where((element) => element.name == value).first);
+          },
           asyncSuggestions: (value) async => await _fetchSuggestions(value)),
       drawer: Drawer(
           child: ListView(padding: EdgeInsets.zero, children: [
@@ -171,7 +191,7 @@ class _HomePageState extends State<HomePage> {
         child: Stack(
           children: [
             isLocationAvailable
-                ? MyMap(lat, long, markers)
+                ? ref = MyMap(lat, long, stands)
                 : Container(
                     alignment: Alignment.center,
                     child: CircularProgressIndicator()),

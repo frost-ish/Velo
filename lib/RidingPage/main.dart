@@ -6,6 +6,7 @@ import 'package:velo/Helpers/gps_service.dart';
 import 'package:velo/HomePage/map.dart';
 import 'package:velo/RidingPage/travel_info.dart';
 
+import '../Helpers/stand.dart';
 import '../QRCode/qr_code.dart';
 
 class RidingPage extends StatefulWidget {
@@ -36,7 +37,7 @@ class _RidingPageState extends State<RidingPage> {
             home: Scaffold(
               body: Stack(
                 children: [
-                  MyMap(lat, long, <Marker>[].toSet()),
+                  MyMap(lat, long, <Stand>[]),
                   Column(
                     children: [
                       Spacer(),
